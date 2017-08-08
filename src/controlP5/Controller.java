@@ -2,9 +2,9 @@ package controlP5;
 
 /**
  * controlP5 is a processing gui library.
- * 
+ *
  * 2006-2015 by Andreas Schlegel
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
  * as published by the Free Software Foundation; either version 2.1
@@ -13,16 +13,16 @@ package controlP5;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General
  * Public License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA
- * 
+ *
  * @author Andreas Schlegel (http://www.sojamo.de)
  * @modified ##date##
  * @version ##version##
- * 
+ *
  */
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ import processing.event.KeyEvent;
  * created Controller, the existing one will be overwritten. each unique name can be used to automatically link a
  * controller to either a method or a field within your program.</li>
  * </ul>
- * 
+ *
  * @see controlP5.Bang
  * @see controlP5.Button
  * @see controlP5.Knob
@@ -72,7 +72,7 @@ import processing.event.KeyEvent;
  * @see controlP5.ControlGroup
  * @see controlP5.ControlBehavior
  * @see controlP5.ControlEvent
- * 
+ *
  * @example use/ControlP5basics
  */
 public abstract class Controller< T > implements ControllerInterface< T > , CDrawable , ControlP5Constants {
@@ -87,6 +87,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	protected ControlP5 cp5;
 	private int width;
 	private int height;
+	private int rect_corner_radius = 0;
 	protected int _myId = -1;
 	protected float _myValue = Float.NaN;
 	protected float _myDefaultValue = Float.NaN;
@@ -141,7 +142,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * Convenience constructor to extend Controller.
-	 * 
+	 *
 	 * @example use/ControlP5extendController
 	 * @param theControlP5
 	 * @param theName
@@ -282,7 +283,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	/**
 	 * with setBehavior you can add a ControlBehavior to a controller. A ControlBehavior can be used to e.g.
 	 * automatically change state, function, position, etc.
-	 * 
+	 *
 	 * @example ControlP5behavior
 	 * @param theBehavior ControlBehavior
 	 * @return Controller
@@ -319,7 +320,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * set the default value.
-	 * 
+	 *
 	 * @param theValue float
 	 * @return Controller
 	 */
@@ -330,7 +331,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * enable or prevent the controller to be moveable. By default a controller is moveable.
-	 * 
+	 *
 	 * @param theValue boolean
 	 * @return Controller
 	 */
@@ -341,7 +342,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * checks if a controller is moveable.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	@ControlP5.Layout public boolean isMoveable( ) {
@@ -350,7 +351,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * show or hide the labels of a controller.
-	 * 
+	 *
 	 * @param theValue boolean
 	 * @return Controller
 	 */
@@ -370,7 +371,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	 * Use setBroadcast to enable and disable the broadcasting of changes in a controller's value. By default any value
 	 * changes are forwarded to function controlEvent inside your program. use setBroadcast(false) to disable
 	 * forwarding.
-	 * 
+	 *
 	 * @param theFlag boolean
 	 * @return Controller
 	 */
@@ -382,7 +383,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	/**
 	 * check if broadcasting is enabled or disabled for a controller. Every event relevant for a value change will be
 	 * broadcasted to any of the value-listeners. By default broadcasting for a controller is enabled.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	@ControlP5.Layout public boolean isBroadcast( ) {
@@ -407,7 +408,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * set the position of a controller. The position of a controller is relative.
-	 * 
+	 *
 	 * @param theX float
 	 * @param theY float
 	 * @return Controller
@@ -444,7 +445,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	/**
 	 * continuousUpdateEvents is used for internal updates of a controller. this method is final and can't be
 	 * overridden.
-	 * 
+	 *
 	 * @exclude
 	 */
 	@ControlP5.Invisible public final void continuousUpdateEvents( ) {
@@ -519,11 +520,11 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 							// here the mouseOver is set to false when the mouse
 							// is released outside a controller. the mouseoverlist is not
 							// updated when the mouse is still pressed but has left the
-							// controller - updating the list here currently conflicts 
+							// controller - updating the list here currently conflicts
 							// with callbacks called from inside setMouseOver()
 							//
-							// Note: the mouseoverlist is only updated for ControllerGroups 
-							// when the mouse is pressed but is hovering other controllers while 
+							// Note: the mouseoverlist is only updated for ControllerGroups
+							// when the mouse is pressed but is hovering other controllers while
 							// mouse is dragged.
 						}
 					}
@@ -642,7 +643,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	/**
 	 * enables a controller to listen to changes made to the variable linked to the controller. Use true to enable and
 	 * false to disable a controller from listening to changes.
-	 * 
+	 *
 	 * @param theFlag
 	 * @return Controller
 	 */
@@ -661,9 +662,9 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * returns true or false for the current listening status. by default it is set to false
-	 * 
+	 *
 	 * @see controlP5.Controller#listen(boolean)
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean isListening( ) {
@@ -672,7 +673,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * check if the mouse is within this particular controller.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean isMouseOver( ) {
@@ -708,7 +709,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	 * the default draw function for each controller extending superclass Controller. This draw function will take care
 	 * of default matrix operations and will call the display function of the current ControllerView object active for
 	 * this particular controller.
-	 * 
+	 *
 	 * @exclude
 	 * @see controlP5.ControllerView
 	 * @param theApplet PApplet
@@ -779,7 +780,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * returns the index name of the controller.
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getName( ) {
@@ -789,7 +790,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	/**
 	 * moves the controller to another tab. The tab is defined by parameter theTabName. if controlP5 can't find a tab
 	 * with given name, controlP5 will create this tab and add it to the main window.
-	 * 
+	 *
 	 * @param theTabName String
 	 * @return Controller
 	 */
@@ -803,7 +804,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * moves the controller to another tab.
-	 * 
+	 *
 	 * @param theTab
 	 * @return Controller
 	 */
@@ -817,7 +818,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * moves the controller to the default tab inside the main window.
-	 * 
+	 *
 	 * @param theApplet
 	 * @return Controller
 	 */
@@ -831,7 +832,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * moves the controller to a tab inside the main window.
-	 * 
+	 *
 	 * @param theApplet
 	 * @param theTabName
 	 */
@@ -845,7 +846,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * moves the controller to the default tab of a control window - other than the main window.
-	 * 
+	 *
 	 * @param theControlWindow
 	 */
 	public final T moveTo( final ControlWindow theControlWindow ) {
@@ -857,7 +858,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	}
 
 	/**
-	 * 
+	 *
 	 * @param theControlWindow
 	 * @param theTabName
 	 * @return Controller
@@ -892,7 +893,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	}
 
 	/**
-	 * 
+	 *
 	 * @param theGroup
 	 * @return Controller
 	 */
@@ -915,7 +916,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * sets the tab of the controller.
-	 * 
+	 *
 	 * @param theName String
 	 * @return Controller
 	 */
@@ -928,7 +929,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public final T setTab( final ControlWindow theWindow , final String theName ) {
 		setParent( cp5.getTab( theWindow , theName ) );
@@ -940,7 +941,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * sets the group of the controller.
-	 * 
+	 *
 	 * @param theName String
 	 * @return Controller
 	 */
@@ -962,7 +963,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * get the instance of the tab the controller belongs to.
-	 * 
+	 *
 	 * @return Tab
 	 */
 	public Tab getTab( ) {
@@ -975,7 +976,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	/**
 	 * set the parent of a parent of a controller. this method is only meant for internal use. this method is final and
 	 * can't be overwritten.
-	 * 
+	 *
 	 * @param theParent ControllerInterface
 	 * @return Controller
 	 */
@@ -996,7 +997,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * returns the parent of a controller.
-	 * 
+	 *
 	 * @return ControllerInterface
 	 */
 
@@ -1006,7 +1007,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * returns the control window of the controller
-	 * 
+	 *
 	 * @return ControlWindow
 	 */
 	public ControlWindow getWindow( ) {
@@ -1015,7 +1016,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * checks if the mouse is within the area of a controller.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	protected boolean inside( ) {
@@ -1030,7 +1031,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * returns true or false and indicates if the mouse is inside the area of a controller.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean isInside( ) {
@@ -1039,7 +1040,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * checks if a controller is active.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	@ControlP5.Layout public boolean isActive( ) {
@@ -1048,7 +1049,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * returns true or false if the mouse has is pressed.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean isMousePressed( ) {
@@ -1213,7 +1214,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	}
 
 	/**
-	 * 
+	 *
 	 * @param KeyEvent theEvent
 	 */
 	@ControlP5.Invisible public void keyEvent( final KeyEvent theEvent ) {
@@ -1221,7 +1222,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * set the id of a controller.
-	 * 
+	 *
 	 * @param int theId
 	 * @return Controller
 	 */
@@ -1233,7 +1234,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	/**
 	 * returns the id of a controller, by default the id is -1. Any int can be given to a controller as its ID,
 	 * controlP5 does not recognize duplicates, this has to be managed on the user site.
-	 * 
+	 *
 	 * @return int
 	 */
 	@ControlP5.Layout public int getId( ) {
@@ -1245,7 +1246,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	}
 
 	/**
-	 * 
+	 *
 	 * @return List<ControllerPlug>
 	 */
 	public List< ControllerPlug > getControllerPlugList( ) {
@@ -1273,7 +1274,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * plugs the controller to a list of objects
-	 * 
+	 *
 	 * @param theObject
 	 * @return Controller
 	 */
@@ -1285,7 +1286,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	}
 
 	/**
-	 * 
+	 *
 	 * @param theObjects
 	 * @param theName
 	 * @return Controller
@@ -1316,7 +1317,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * unplugs the controller from a list of objects
-	 * 
+	 *
 	 * @param theObjects
 	 * @return
 	 */
@@ -1329,7 +1330,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * unplugs the Controller for a single object
-	 * 
+	 *
 	 * @param theObject
 	 * @return Controller
 	 */
@@ -1381,7 +1382,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	/**
 	 * @see Controller#getValue()
 	 * @see Controller#getArrayValue()
-	 * 
+	 *
 	 * @return String
 	 */
 	@ControlP5.Layout public String getStringValue( ) {
@@ -1390,10 +1391,10 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * returns the current float array value of a controller.
-	 * 
+	 *
 	 * @see Controller#getValue()
 	 * @see Controller#getStringValue()
-	 * 
+	 *
 	 * @return float[]
 	 */
 	@ControlP5.Layout public float[] getArrayValue( ) {
@@ -1413,7 +1414,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	}
 
 	/**
-	 * 
+	 *
 	 * @param theArray
 	 * @return Controller
 	 */
@@ -1423,7 +1424,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	}
 
 	/**
-	 * 
+	 *
 	 * @param theIndex
 	 * @param theValue
 	 * @return Controller
@@ -1437,7 +1438,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * sets the value of the controller without sending the broadcast event. this function is final.
-	 * 
+	 *
 	 * @param theValue float
 	 * @return Controller
 	 */
@@ -1452,7 +1453,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	/**
 	 * updates the value of the controller without having to set the value explicitly. update does not visually update
 	 * the controller. the updating status can be set with setUpdate(true/false) and checked with isUpdate().
-	 * 
+	 *
 	 * @see Controller#setUpdate(boolean)
 	 * @see Controller#isUpdate()
 	 * @return Controller
@@ -1463,10 +1464,10 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * disables the update function for a controller.
-	 * 
+	 *
 	 * @see Controller#update()
 	 * @see Controller#isUpdate()
-	 * 
+	 *
 	 * @param theFlag boolean
 	 * @return Controller
 	 */
@@ -1477,10 +1478,10 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * enables the update function for a controller.
-	 * 
+	 *
 	 * @see Controller#update()
 	 * @see Controller#setUpdate(boolean)
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean isUpdate( ) {
@@ -1500,7 +1501,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * sets the content of the caption label of a controller.
-	 * 
+	 *
 	 * @param theLabel
 	 * @return Controller
 	 */
@@ -1511,7 +1512,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * set or change the value of the value label of a controller. (this is cheating, but maybe useful for some cases.)
-	 * 
+	 *
 	 * @param theLabel
 	 * @return Controller
 	 */
@@ -1522,7 +1523,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * returns the controller's caption label text.
-	 * 
+	 *
 	 * @return String
 	 */
 	@ControlP5.Invisible public String getLabel( ) {
@@ -1680,7 +1681,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @param theColor
 	 * @return Controller
 	 */
@@ -1706,7 +1707,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	 * by default controllers use simple shapes, to replace these shapes with images, use setImages(). This can be handy
 	 * for buttons, toggles, bangs, for more complex controllers such as sliders, range, dropdownlist this is not
 	 * advisable.
-	 * 
+	 *
 	 * @param theImageDefault
 	 * @param theImageOver
 	 * @param theImageActive
@@ -1765,7 +1766,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * auto-updates the size of a controller according to the dimensions of the PImage.
-	 * 
+	 *
 	 * @param theImage
 	 * @return Controller
 	 */
@@ -1797,7 +1798,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	/**
 	 * use setDisplay to customize your controller look. A new controller-display class required to implement interface
 	 * ControllerView. By default the display mode will be set to CUSTOM when setting a new display.
-	 * 
+	 *
 	 * @see controlP5.ControllerView
 	 * @param theView
 	 * @return Controller
@@ -1833,7 +1834,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * returns the maximum value of the controller.
-	 * 
+	 *
 	 * @return float
 	 */
 	@ControlP5.Layout public float getMax( ) {
@@ -1842,7 +1843,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * returns the minimum value of the controller.
-	 * 
+	 *
 	 * @return float
 	 */
 	@ControlP5.Layout public float getMin( ) {
@@ -1851,7 +1852,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * sets the minimum value of the Controller.
-	 * 
+	 *
 	 * @param theValue float
 	 * @return Controller
 	 */
@@ -1863,7 +1864,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * sets the maximum value of the Controller.
-	 * 
+	 *
 	 * @param theValue float
 	 * @return Controller
 	 */
@@ -1899,6 +1900,22 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	}
 
 	/**
+	 * @param theRadius
+	 * @return Controller
+	 */
+	@ControlP5.Layout public T setRectCornerRadius(int theRadius) {
+		rect_corner_radius = theRadius;
+		return me;
+	}
+
+	/**
+	 * @return int
+	 */
+	@ControlP5.Layout public int getRectCornerRadius( ) {
+		return rect_corner_radius;
+	}
+
+	/**
 	 * @return int
 	 */
 	@ControlP5.Layout public int getHeight( ) {
@@ -1908,7 +1925,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	/**
 	 * sets the decimal precision of a controller's float value displayed. the precision does not apply to the returned
 	 * float value.
-	 * 
+	 *
 	 * @param theValue
 	 * @return Controller
 	 */
@@ -1993,7 +2010,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * disables the controller to be moved, or changed or controlled by the user.
-	 * 
+	 *
 	 * @return Controller
 	 */
 	public T lock( ) {
@@ -2003,7 +2020,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * enables the controller to be moved, changed and controlled by the user.
-	 * 
+	 *
 	 * @return Controller
 	 */
 	public T unlock( ) {
@@ -2020,7 +2037,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * sets the lock status of the controller
-	 * 
+	 *
 	 * @param theValue
 	 * @return Controller
 	 */
@@ -2048,7 +2065,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	/**
 	 * adds a tooltip to a controller, by default the tooltip is disabled. A Tooltip is made visible when entering a
 	 * controller with the mouse, when the mouse is moved inside the controller, the tooltip will hide.
-	 * 
+	 *
 	 * @param theText
 	 * @return Controller
 	 */
@@ -2164,7 +2181,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 
 	/**
 	 * convenience method to fill a float array in favor of theArray[0] = 1.2; etc.
-	 * takes a float array and fills it (starting from index 0) with arguments starting from index 1.  
+	 * takes a float array and fills it (starting from index 0) with arguments starting from index 1.
 	 */
 	static public float[] set( float[] theArray , float ... theValues ) {
 		if ( theValues.length > theArray.length ) {
