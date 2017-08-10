@@ -35,12 +35,13 @@ public class CColor implements Serializable {
 
 	private int colorBackground = 0xff003652;
 	private int colorForeground = 0xff00698c;
-	private int colorActive = 0xff08a2cf; // 0699C4;
+	private int colorStroke = 0xff000000;
+	private int colorActive = 0xff08a2cf;  // 0699C4;
 	private int colorCaptionLabel = 0xffffffff;
 	private int colorValueLabel = 0xffffffff;
 	private int colorBackgroundAlpha = 0xff;
 	private int colorForegroundAlpha = 0xff;
-	private int colorActiveAlpha = 0xff; // 0699C4;
+	private int colorActiveAlpha = 0xff;  // 0699C4;
 	private int colorCaptionLabelAlpha = 0xff;
 	private int colorValueLabelAlpha = 0xff;
 
@@ -53,6 +54,7 @@ public class CColor implements Serializable {
 	protected CColor set( CColor theColor ) {
 		colorBackground = theColor.colorBackground;
 		colorForeground = theColor.colorForeground;
+		colorStroke = theColor.colorStroke;
 		colorActive = theColor.colorActive;
 		colorCaptionLabel = theColor.colorCaptionLabel;
 		colorValueLabel = theColor.colorValueLabel;
@@ -65,10 +67,11 @@ public class CColor implements Serializable {
 	}
 
 	protected CColor copyTo( ControllerInterface< ? > theControl ) {
-		theControl.setColorBackground( colorBackground );
-		theControl.setColorForeground( colorForeground );
-		theControl.setColorActive( colorActive );
-		theControl.setColorLabel( colorCaptionLabel );
+		theControl.setColorBackground(colorBackground);
+		theControl.setColorForeground(colorForeground);
+		theControl.setColorActive(colorActive);
+		theControl.setColorStroke(colorStroke);
+		theControl.setColorLabel(colorCaptionLabel);
 		return this;
 	}
 
@@ -103,52 +106,38 @@ public class CColor implements Serializable {
 	 * @param theAlpha
 	 */
 	public CColor setAlpha( int theAlpha ) {
-		System.out.println( "controlP5.CColor.setAlpha: setting alpha values disabled for this version of controlP5." );
+		// System.out.println( "controlP5.CColor.setAlpha: setting alpha values disabled for this version of controlP5." );
+		alpha = theAlpha;
 		return this;
 	}
 
 	public CColor setForeground( int theColor ) {
-		if ( ( theColor & 0xff000000 ) == 0 ) {
-			colorForeground = 0xff000000;
-		} else {
-			colorForeground = theColor;
-		}
+		colorForeground = theColor;
 		return this;
 	}
 
 	public CColor setBackground( int theColor ) {
-		if ( ( theColor & 0xff000000 ) == 0 ) {
-			colorBackground = 0xff000000;
-		} else {
-			colorBackground = theColor;
-		}
+		colorBackground = theColor;
+		return this;
+	}
+
+	public CColor setStroke( int theColor ) {
+		colorStroke = theColor;
 		return this;
 	}
 
 	public CColor setActive( int theColor ) {
-		if ( ( theColor & 0xff000000 ) == 0 ) {
-			colorActive = 0xff000000;
-		} else {
-			colorActive = theColor;
-		}
+		colorActive = theColor;
 		return this;
 	}
 
 	public CColor setCaptionLabel( int theColor ) {
-		if ( ( theColor & 0xff000000 ) == 0 ) {
-			colorCaptionLabel = 0xff000000;
-		} else {
-			colorCaptionLabel = theColor;
-		}
+		colorCaptionLabel = theColor;
 		return this;
 	}
 
 	public CColor setValueLabel( int theColor ) {
-		if ( ( theColor & 0xff000000 ) == 0 ) {
-			colorValueLabel = 0xff000000;
-		} else {
-			colorValueLabel = theColor;
-		}
+		colorValueLabel = theColor;
 		return this;
 	}
 
@@ -166,6 +155,10 @@ public class CColor implements Serializable {
 
 	public int getActive( ) {
 		return colorActive;
+	}
+
+	public int getStroke( ) {
+		return colorStroke;
 	}
 
 	public int getCaptionLabel( ) {

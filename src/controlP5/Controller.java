@@ -1666,6 +1666,14 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override @ControlP5.Layout public T setColorStroke( final int theColor ) {
+		color.setStroke( theColor );
+		return me;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override @ControlP5.Layout public T setColorForeground( final int theColor ) {
 		color.setForeground( theColor );
 		return me;

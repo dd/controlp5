@@ -2,9 +2,9 @@ package controlP5;
 
 /**
  * controlP5 is a processing gui library.
- * 
+ *
  * 2006-2015 by Andreas Schlegel
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
  * as published by the Free Software Foundation; either version 2.1
@@ -13,16 +13,16 @@ package controlP5;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General
  * Public License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA
- * 
+ *
  * @author Andreas Schlegel (http://www.sojamo.de)
  * @modified ##date##
  * @version ##version##
- * 
+ *
  */
 
 import java.util.Arrays;
@@ -41,10 +41,10 @@ import processing.event.KeyEvent;
 /**
  * A singleline input textfield, use arrow keys to go back and forth, use backspace to delete
  * characters. Using the up and down arrows lets you cycle through the history of the textfield.
- * 
+ *
  * This is the best you can get. Font handling, font switching, measuring, left align, right align,
  * etc. was giving me a big headache. not perfect, i think this is a good compromise.
- * 
+ *
  * @example controllers/ControlP5textfield
  * @nosuperclasses Controller Controller
  */
@@ -72,6 +72,9 @@ public class Textfield extends Controller< Textfield > {
 	protected boolean autoclear = true;
 	protected int _myColorCursor = 0x88ffffff;
 	private PGraphics buffer;
+	protected String placeholder = "";
+	private int colorPlaceholder = 0x4d000000;  // color(0, 0, 0, 255*0.3);
+	// protected boolean _toUpperCase = false;
 
 	public enum InputFilter {
 		INTEGER(Arrays.asList( '0' , '1' , '2' , '3' , '4' , '5' , '6' , '7' , '8' , '9' )), FLOAT(Arrays.asList( '0' , '1' , '2' , '3' , '4' , '5' , '6' , '7' , '8' , '9' , '.' )), BITFONT(Arrays.asList( '\n' , '\r' , ' ' , '!' , '"' , '#' , '$' , '%' ,
@@ -97,7 +100,7 @@ public class Textfield extends Controller< Textfield > {
 
 	/**
 	 * Convenience constructor to extend Textfield.
-	 * 
+	 *
 	 * @example use/ControlP5extendController
 	 * @param theControlP5
 	 * @param theName
@@ -116,20 +119,20 @@ public class Textfield extends Controller< Textfield > {
 		_myCaptionLabel.setPaddingX( 0 );
 
 		_myBroadcastType = STRING;
-		_myValueLabel.setFixedSize( true );
-		_myValueLabel.set( "" );
-		_myValueLabel.setWidth( getWidth( ) - margin * 2 );
-		_myValueLabel.setPadding( 0 , 0 );
+		_myValueLabel.setFixedSize(true);
+		_myValueLabel.set("");
+		_myValueLabel.setWidth(getWidth()-margin*2);
+		_myValueLabel.setPadding(0, 0);
 		_myValueLabel.align( LEFT , CENTER );
 		_myValueLabel.setColor( color.getValueLabel( ) );
-		_myValueLabel.toUpperCase( false );
+		_myValueLabel.toUpperCase(false);
 
 		_myValueLabel.setLabeltype( _myValueLabel.new SinglelineTextfield( ) );
 
 		_myHistory = new LinkedList< String >( );
-		_myHistory.addFirst( "" );
+		_myHistory.addFirst("");
 
-		setSize( getWidth( ) , getHeight( ) );
+		setSize(getWidth(), getHeight());
 
 		keyMapping = new HashMap< Integer , TextfieldCommand >( );
 		keyMapping.put( ENTER , new Enter( ) );
@@ -153,7 +156,7 @@ public class Textfield extends Controller< Textfield > {
 	}
 
 	@Override public Textfield setWidth( int theWidth ) {
-		_myValueLabel.setWidth( theWidth );
+		_myValueLabel.setWidth(theWidth);
 		return super.setWidth( theWidth );
 	}
 
@@ -169,7 +172,7 @@ public class Textfield extends Controller< Textfield > {
 
 	/**
 	 * check if the textfield is active and in focus.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean isFocus( ) {
@@ -198,6 +201,21 @@ public class Textfield extends Controller< Textfield > {
 		getValueLabel( ).setFont( theFont );
 		return this;
 	}
+
+	public Textfield setPlaceholder(String theText) {
+		placeholder = theText;
+		return this;
+	}
+
+	public Textfield setColorPlaceholder(int theColor) {
+		colorPlaceholder = theColor;
+		return this;
+	}
+
+	// public Textfield toUpperCase(boolean value) {
+	// 	_toUpperCase = value;
+	// 	return this;
+	// }
 
 	public Textfield setPasswordMode( boolean theFlag ) {
 		isPasswordMode = theFlag;
@@ -283,6 +301,14 @@ public class Textfield extends Controller< Textfield > {
 		return _myTextBuffer.toString( );
 	}
 
+	public String getPlaceholder() {
+		return placeholder;
+	}
+
+	public int getColorPlaceholder() {
+		return colorPlaceholder;
+	}
+
 	public Textfield setColor( int theColor ) {
 		getValueLabel( ).setColor( theColor );
 		return this;
@@ -300,49 +326,57 @@ public class Textfield extends Controller< Textfield > {
 	}
 
 	@Override public void draw( PGraphics theGraphics ) {
+		theGraphics.pushStyle();
+		theGraphics.pushMatrix();
 
-		theGraphics.pushStyle( );
-		theGraphics.fill( color.getBackground( ) );
-		theGraphics.pushMatrix( );
-		theGraphics.translate( x( position ) , y( position ) );
-		theGraphics.rect( 0 , 0 , getWidth( ) , getHeight( ) );
-		theGraphics.noStroke( );
+		// draw input block
+		theGraphics.fill(color.getBackground());
+		theGraphics.stroke(isTexfieldActive ? color.getActive() : color.getStroke());
+		theGraphics.translate(x(position), y(position));
+		theGraphics.rect(0, 0, getWidth(), getHeight(), getRectCornerRadius());
 
-		theGraphics.fill( _myColorCursor );
-		theGraphics.pushMatrix( );
-		theGraphics.pushStyle( );
+		theGraphics.noStroke();
+		theGraphics.fill(_myColorCursor);
+		theGraphics.pushMatrix();
+		theGraphics.pushStyle();
 
-		buffer.beginDraw( );
-		buffer.background( 0 , 0 );
-		final String text = passCheck( getText( ) );
-		final int textWidth = ControlFont.getWidthFor( text.substring( 0 , _myTextBufferIndex ) , _myValueLabel , buffer );
-		final int dif = PApplet.max( textWidth - _myValueLabel.getWidth( ) , 0 );
-		final int _myTextBufferIndexPosition = ControlFont.getWidthFor( text.substring( 0 , _myTextBufferIndex ) , _myValueLabel , buffer );
-		_myValueLabel.setText( text );
-		_myValueLabel.draw( buffer , -dif , 0 , this );
-		buffer.noStroke( );
+		// draw text
+		buffer.beginDraw();
+		buffer.background(0, 0);
+		String text = passCheck(getText());
+		if (text.length() == 0) {
+			text = getPlaceholder();
+			_myValueLabel.setColor(getColorPlaceholder());
+		} else {
+			_myValueLabel.setColor(getColor().getValueLabel());
+		}
+		final int textWidth = ControlFont.getWidthFor(text.substring(0, _myTextBufferIndex), _myValueLabel, buffer);
+		final int dif = PApplet.max(textWidth+_myValueLabel._myPaddingX*2-_myValueLabel.getWidth(), 0);
+		final int _myTextBufferIndexPosition = ControlFont.getWidthFor(text.substring(0, _myTextBufferIndex), _myValueLabel, buffer );
+		// if (_toUpperCase) {
+		// 	text = text.toUpperCase();
+		// }
+		_myValueLabel.setText(text);
+		_myValueLabel.draw(buffer, -dif, 0, this);
+
+		// draw cursor
+		buffer.noStroke();
 		if ( isTexfieldActive ) {
 			if ( !cp5.papplet.keyPressed ) {
-				buffer.fill( _myColorCursor , PApplet.abs( PApplet.sin( cp5.papplet.frameCount * 0.05f )) * 255 );
+				buffer.fill(_myColorCursor , PApplet.abs( PApplet.sin( cp5.papplet.frameCount * 0.05f )) * 255 );
 			} else {
-				buffer.fill( _myColorCursor );
+				buffer.fill(_myColorCursor);
 			}
-			buffer.rect( PApplet.max( 1 , PApplet.min( _myTextBufferIndexPosition , _myValueLabel.getWidth( ) - 3 ) ) , 0 , 1 , getHeight( ) );
+			buffer.rect(PApplet.max(1, PApplet.min(_myTextBufferIndexPosition, _myValueLabel.getWidth()-3)), 0, 1, getHeight(), getRectCornerRadius());
 		}
-		buffer.endDraw( );
-		theGraphics.image( buffer , 0 , 0 );
+		buffer.endDraw();
+		theGraphics.image(buffer, 0, 0);
 
-		theGraphics.popStyle( );
-		theGraphics.popMatrix( );
+		theGraphics.popStyle();
+		theGraphics.popMatrix();
 
-		theGraphics.fill( isTexfieldActive ? color.getActive( ) : color.getForeground( ) );
-		theGraphics.rect( 0 , 0 , getWidth( ) , 1 );
-		theGraphics.rect( 0 , getHeight( ) - 1 , getWidth( ) , 1 );
-		theGraphics.rect( -1 , 0 , 1 , getHeight( ) );
-		theGraphics.rect( getWidth( ) , 0 , 1 , getHeight( ) );
-		_myCaptionLabel.draw( theGraphics , 0 , 0 , this );
-		theGraphics.popMatrix( );
-		theGraphics.popStyle( );
+		theGraphics.popMatrix();
+		theGraphics.popStyle();
 	}
 
 	private String passCheck( String label ) {
@@ -371,7 +405,7 @@ public class Textfield extends Controller< Textfield > {
 
 	/**
 	 * make the controller execute a return event. submit the current content of the texfield.
-	 * 
+	 *
 	 */
 	public Textfield submit( ) {
 		keyMapping.get( ENTER ).execute( );
@@ -379,8 +413,8 @@ public class Textfield extends Controller< Textfield > {
 	}
 
 	public String[] getTextList( ) {
-		String[] s = new String[ _myHistory.size( ) ];
-		_myHistory.toArray( s );
+		String[] s = new String[_myHistory.size()];
+		_myHistory.toArray(s);
 		return s;
 	}
 
