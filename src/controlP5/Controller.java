@@ -100,6 +100,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	protected boolean isBroadcast = true;
 	protected boolean isVisible = true;
 	protected boolean isActive = false;
+	protected boolean isActiveButHiden = false;
 	protected boolean isLock = false;
 	protected boolean isUserInteraction = true;
 	protected boolean isInit = false;
@@ -714,16 +715,19 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 	 * @see controlP5.ControllerView
 	 * @param theApplet PApplet
 	 */
-	@ControlP5.Invisible @Override public void draw( final PGraphics theGraphics ) {
-
-		theGraphics.pushMatrix( );
-		theGraphics.translate( x( position ) , y( position ) );
-		_myControllerView.display( theGraphics , me );
-		// theGraphics.pushMatrix( );
-		// _myDebugView.display( theGraphics , me );
-		// theGraphics.popMatrix( );
-		theGraphics.popMatrix( );
-
+	public void draw( final PGraphics theGraphics, final Boolean show ) {
+		if (!this.isActiveButHiden || show) {
+			theGraphics.pushMatrix( );
+			theGraphics.translate( x( position ) , y( position ) );
+			_myControllerView.display( theGraphics , me );
+			// theGraphics.pushMatrix( );
+			// _myDebugView.display( theGraphics , me );
+			// theGraphics.popMatrix( );
+			theGraphics.popMatrix( );
+		}
+	}
+	public void draw( final PGraphics theGraphics) {
+		this.draw(theGraphics, false);
 	}
 
 	/**
@@ -1624,6 +1628,11 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 		if ( theFlag == false ) {
 			isActive = false;
 		}
+		return me;
+	}
+
+	@ControlP5.Layout public T setActiveButHiden( final boolean theFlag ) {
+		isActiveButHiden = theFlag;
 		return me;
 	}
 
