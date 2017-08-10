@@ -482,7 +482,7 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 			}
 		}
 
-		if ( isVisible && ( isMousePressed == _myControlWindow.mouselock ) ) {
+		if ( (isVisible || isActiveButHiden) && ( isMousePressed == _myControlWindow.mouselock ) ) {
 			if ( isMousePressed && cp5.isAltDown( ) && isMoveable ) {
 				if ( !cp5.isMoveable ) {
 					set( positionBuffer , x( positionBuffer ) + _myControlWindow.mouseX - _myControlWindow.pmouseX , y( positionBuffer ) + _myControlWindow.mouseY - _myControlWindow.pmouseY );
@@ -580,8 +580,8 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 		};
 	}
 
-	@ControlP5.Invisible public final boolean setMousePressed( final boolean theStatus ) {
-		if ( !isVisible && !isUserInteraction ) {
+	@ControlP5.Invisible public boolean setMousePressed( final boolean theStatus ) {
+		if ( !isVisible && !isUserInteraction && !isActiveButHiden ) {
 			return false;
 		}
 		if ( theStatus == true ) {

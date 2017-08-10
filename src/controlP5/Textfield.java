@@ -325,58 +325,60 @@ public class Textfield extends Controller< Textfield > {
 		return this;
 	}
 
-	@Override public void draw( PGraphics theGraphics ) {
-		theGraphics.pushStyle();
-		theGraphics.pushMatrix();
+	@Override public void draw( PGraphics theGraphics, final Boolean show ) {
+		if (!this.isActiveButHiden || show) {
+			theGraphics.pushStyle();
+			theGraphics.pushMatrix();
 
-		// draw input block
-		theGraphics.fill(color.getBackground());
-		theGraphics.stroke(isTexfieldActive ? color.getActive() : color.getStroke());
-		theGraphics.translate(x(position), y(position));
-		theGraphics.rect(0, 0, getWidth(), getHeight(), getRectCornerRadius());
+			// draw input block
+			theGraphics.fill(color.getBackground());
+			theGraphics.stroke(isTexfieldActive ? color.getActive() : color.getStroke());
+			theGraphics.translate(x(position), y(position));
+			theGraphics.rect(0, 0, getWidth(), getHeight(), getRectCornerRadius());
 
-		theGraphics.noStroke();
-		theGraphics.fill(_myColorCursor);
-		theGraphics.pushMatrix();
-		theGraphics.pushStyle();
+			theGraphics.noStroke();
+			theGraphics.fill(_myColorCursor);
+			theGraphics.pushMatrix();
+			theGraphics.pushStyle();
 
-		// draw text
-		buffer.beginDraw();
-		buffer.background(0, 0);
-		String text = passCheck(getText());
-		if (text.length() == 0) {
-			text = getPlaceholder();
-			_myValueLabel.setColor(getColorPlaceholder());
-		} else {
-			_myValueLabel.setColor(getColor().getValueLabel());
-		}
-		final int textWidth = ControlFont.getWidthFor(text.substring(0, _myTextBufferIndex), _myValueLabel, buffer);
-		final int dif = PApplet.max(textWidth+_myValueLabel._myPaddingX*2-_myValueLabel.getWidth(), 0);
-		final int _myTextBufferIndexPosition = ControlFont.getWidthFor(text.substring(0, _myTextBufferIndex), _myValueLabel, buffer );
-		// if (_toUpperCase) {
-		// 	text = text.toUpperCase();
-		// }
-		_myValueLabel.setText(text);
-		_myValueLabel.draw(buffer, -dif, 0, this);
-
-		// draw cursor
-		buffer.noStroke();
-		if ( isTexfieldActive ) {
-			if ( !cp5.papplet.keyPressed ) {
-				buffer.fill(_myColorCursor , PApplet.abs( PApplet.sin( cp5.papplet.frameCount * 0.05f )) * 255 );
+			// draw text
+			buffer.beginDraw();
+			buffer.background(0, 0);
+			String text = passCheck(getText());
+			if (text.length() == 0) {
+				text = getPlaceholder();
+				_myValueLabel.setColor(getColorPlaceholder());
 			} else {
-				buffer.fill(_myColorCursor);
+				_myValueLabel.setColor(getColor().getValueLabel());
 			}
-			buffer.rect(PApplet.max(1, PApplet.min(_myTextBufferIndexPosition, _myValueLabel.getWidth()-3)), 0, 1, getHeight(), getRectCornerRadius());
+			final int textWidth = ControlFont.getWidthFor(text.substring(0, _myTextBufferIndex), _myValueLabel, buffer);
+			final int dif = PApplet.max(textWidth+_myValueLabel._myPaddingX*2-_myValueLabel.getWidth(), 0);
+			final int _myTextBufferIndexPosition = ControlFont.getWidthFor(text.substring(0, _myTextBufferIndex), _myValueLabel, buffer );
+			// if (_toUpperCase) {
+			// 	text = text.toUpperCase();
+			// }
+			_myValueLabel.setText(text);
+			_myValueLabel.draw(buffer, -dif, 0, this);
+
+			// draw cursor
+			buffer.noStroke();
+			if ( isTexfieldActive ) {
+				if ( !cp5.papplet.keyPressed ) {
+					buffer.fill(_myColorCursor , PApplet.abs( PApplet.sin( cp5.papplet.frameCount * 0.05f )) * 255 );
+				} else {
+					buffer.fill(_myColorCursor);
+				}
+				buffer.rect(PApplet.max(1, PApplet.min(_myTextBufferIndexPosition, _myValueLabel.getWidth()-3)), 0, 1, getHeight(), getRectCornerRadius());
+			}
+			buffer.endDraw();
+			theGraphics.image(buffer, 0, 0);
+
+			theGraphics.popStyle();
+			theGraphics.popMatrix();
+
+			theGraphics.popMatrix();
+			theGraphics.popStyle();
 		}
-		buffer.endDraw();
-		theGraphics.image(buffer, 0, 0);
-
-		theGraphics.popStyle();
-		theGraphics.popMatrix();
-
-		theGraphics.popMatrix();
-		theGraphics.popStyle();
 	}
 
 	private String passCheck( String label ) {
