@@ -643,6 +643,7 @@ public final class ControlWindow {
 			pmousePressedTime = mousePressedTime;
 			mousePressedTime = System.currentTimeMillis( );
 			for ( int i = 0 ; i < _myTabs.size( ) ; i++ ) {
+				( ( ControllerInterface< ? > ) _myTabs.get( i ) ).updateEvents();
 				if ( ( ( ControllerInterface< ? > ) _myTabs.get( i ) ).setMousePressed( true ) ) {
 					mouselock = true;
 					return;

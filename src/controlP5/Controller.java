@@ -603,7 +603,6 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 			if ( isMousePressed == true && inside( ) ) {
 				isMousePressed = false;
 				if ( !cp5.isAltDown( ) ) {
-
 					mouseReleased( );
 					onRelease( );
 					cp5.getControlBroadcaster( ).invokeAction( new CallbackEvent( this , ACTION_RELEASE ) );
@@ -619,7 +618,6 @@ public abstract class Controller< T > implements ControllerInterface< T > , CDra
 					}
 
 					isDragged = false;
-
 				}
 			}
 			if ( !inside( ) ) {
